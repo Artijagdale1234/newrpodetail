@@ -1,0 +1,151 @@
+//create database intershipquery1;
+//create table testing1(rno int,name char)
+//select* from testing1
+create table intership_employee(Empid int,name varchar(20),salary float)
+select* from intership_employee
+insert into intership_employee (Empid,name,salary)values(101,'Sai',12000)
+insert into intership_employee (Empid,name,salary)values(112,'Sai',17000)
+insert into intership_employee (Empid,name,salary)values(102,'Shri',13000)
+insert into intership_employee (Empid,name,salary)values(103,'Arti',14000)
+insert into intership_employee (Empid,name,salary)values(104,'Bhgyashree',14500)
+insert into intership_employee (Empid,name,salary)values(105,'Rupa',12500)
+insert into intership_employee (Empid,name,salary)values(106,'Sanket',15000)
+insert into intership_employee (Empid,name,salary)values(107,'Sonam',16000)
+insert into intership_employee (Empid,name,salary)values(108,'Radha',15000)
+insert into intership_employee (Empid,name,salary)values(109,'Sonali',20000)
+insert into intership_employee (Empid,name,salary)values(110,'Mahesh',21000)
+insert into intership_employee (Empid,name,salary)values(111,'Dhanvi',17000)
+1)Select Top 5*from  intership_employee Order By salary Desc
+Dept
+create table intership_Department(Depid int,Deptname varchar(20))
+insert into intership_Department(Depid,Deptname)values(1,'hr')
+insert into intership_Department (Depid,Deptname)values(2,'Fin')
+insert into intership_Department (Depid,Deptname)values(3,'accounti')
+insert into intership_Department(Depid,Deptname)values(4,'Production')
+insert into intership_Departmet(Depid,Deptname)values(5,'RND')
+insert into intership_Department (Depid,Deptname)values(6,'QC') 
+insert into intership_Department (Depid,Deptname)values(7,'math')
+insert into intership_Department (Depid,Deptname)values(8,'Stat')
+insert into intership_Department(Depid,Deptname)values(9,'Eco')
+insert into intership_Department(Depid,Deptname)values(10,'Art')
+select*from intership_Department 
+select* from intership_Department
+alter table intership_employee Add depid int
+alter table intership_employee Add deptname varchar(20)
+update intership_employee SET depid =1 where empid=101
+update intership_employee SET depid =2 where empid=102
+update intership_employee SET depid =3 where empid=103
+update intership_employee SET depid =4 where empid=104
+update intership_employee SET depid =5 where empid=105
+update intership_employee SET depid =6 where empid=106
+update intership_employee SET depid =7 where empid=107
+update intership_employee SET depid =8 where empid=108
+select*from intership_employee
+
+alter table intership_employee Add deptname varchar(20)
+select* from intership_employee
+update intership_employee SET deptname ='hr' where empid=101
+update intership_employee SET deptname ='hr' where empid=102
+update intership_employee SET deptname ='hr' where empid=103
+update intership_employee SET deptname ='eco' where empid=104
+update intership_employee SET deptname ='math' where empid=105
+update intership_employee SET deptname ='math' Where empid=106
+update intership_employee SET deptname ='eco' Where empid=109
+update intership_employee SET deptname ='stat' where empid=107
+update intership_employee SET deptname ='production' where empid=108
+select* from intership_employee
+Select Depid,COUNT(*) AS Employee_count From intership_employee GROUP BY Depid
+sp_help intership_employee
+sp_help intership_Department
+select *from intership_department
+select*intership_Department
+SELECT Name, COUNT(*)
+FROM intership_employee
+GROUP BY Name
+HAVING COUNT(*) > 1;
+WITH CTE AS (
+    SELECT *,
+           ROW_NUMBER() OVER (PARTITION BY Name ORDER BY EmpId) AS rn
+    FROM intership_employee
+)
+DELETE FROM CTE
+WHERE rn > 1;
+
+2)Departmentwise employee count 
+SELECT Depid,
+       COUNT(*) AS Employee_Count
+FROM intership_Department
+GROUP BY Depid;
+
+select*from intership_Department
+select*from intership_employee
+
+3)Find second highest salary
+SELECT MAX(Salary) AS Second_Highest_Salary
+FROM intership_employee
+WHERE Salary < (
+    SELECT MAX(Salary)
+    FROM intership_employee
+);
+
+4)Employee whose salary >dept avg salary
+Select Empid,
+       Name,
+       salary,
+       Depid
+FROM intership_employee e
+WHERE salary > (
+    SELECT AVG(salary)
+    FROM intership_employee
+    WHERE Depid = e.Empid
+);
+
+sp_help intership_employee;
+SELECT TOP 1 *
+FROM intership_employee;
+Dept avg salary 
+
+SELECT Depid,
+       AVG(salary) AS Avg_Salary
+FROM intership_employee
+GROUP BY Depid;
+5
+5)inner join
+SELECT e.Empid,e.name,d.deptname from intership_employee INNER join intership_Department d ON e.Depid=d.depid
+6)Left join 
+
+SELECT e.Name,
+       d.DeptName
+FROM intership_employee e
+LEFT JOIN intership_Department d
+ON e.Depid = d.depid;
+
+7)GROUP BY with HAVING in SQL Server
+
+SELECT Depid,
+       COUNT(*) AS Employee_Count
+FROM intership_employee
+GROUP BY Depid
+HAVING COUNT(*) > 2;
+
+8)EMployee hired in last 6 month
+
+
+9)Find duplicate employee names
+SELECT Name, COUNT(*) AS Duplicate_Count
+FROM intership_employee
+GROUP BY Name
+HAVING COUNT(*) > 1;
+
+10)how to remove duplicate record submission
+WITH CTE AS
+(
+    SELECT *,
+           ROW_NUMBER() OVER (
+               PARTITION BY EmpName
+               ORDER BY EmpId
+           ) AS rn
+    FROM intership_employee
+)
+DELETE FROM CTE
+WHERE rn > 1;
